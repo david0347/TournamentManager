@@ -54,17 +54,22 @@ namespace TournamentManager
             return allEntries;
         }
 
+        //Function to display all check boxes on left hand side of the screen
+        //In retrospect, I should have created a displayCheckBoxes class because I need this implementation twice
         private void displayAllCheckBoxes()
         {
             List<Gamer> allGamers = getAllGamers();
+            //Starting position on the form
             int top = 130;
             int left = 30;
-
+            
+            //Add checkBoxes for each gamer
             for(int i = 0; i< allGamers.Count; i++)
             {
                 checkBoxes.Add(addCheckBox(allGamers[i]));
             }
             
+            //Display checkboxes
             for(int j = 0; j < checkBoxes.Count; j++)
             {
                 checkBoxes[j].Location = new Point(left, top);
@@ -73,6 +78,7 @@ namespace TournamentManager
             }
         }
 
+        //Function to create a basic checkbox
         private CheckBox addCheckBox(Gamer gamer)
         {
             CheckBox chkGamers = new CheckBox();
@@ -82,12 +88,14 @@ namespace TournamentManager
             return chkGamers;
         }
 
-
+        //Function to check if there are 8 gamers selected, and if so put them into the bracket
         private void btnConfirmGamers_Click(object sender, EventArgs e)
         {
             List<String> allGamers = new List<String>();
             allGamers = gamersPlaying(checkBoxes);
 
+            //If count == 8 make the confirmGamers button not clickable with the checkboxes
+            //Then set each player in the bracket
             if(allGamers.Count == 8)
             {
                 btnConfirmGamers.Enabled = false;
@@ -97,6 +105,7 @@ namespace TournamentManager
                     checkBoxes[i].Enabled = false;
                 }
 
+                //Set text and enable all the first round buttons
                 btnPlayer1.Text = allGamers[0];
                 btnPlayer2.Text = allGamers[1];
                 btnPlayer3.Text = allGamers[2];
@@ -115,12 +124,14 @@ namespace TournamentManager
                 btnPlayer7.Enabled = true;
                 btnPlayer8.Enabled = true;
             }
+            //Else display error message
             else
             {
                 MessageBox.Show("Select 8 Players to Play. Currently " + allGamers.Count.ToString() + " Players Selected");
             }
         }
 
+        //Return a list of type string with gamer names to be put into checkBoxes
         private List<String> gamersPlaying(List<CheckBox> checkBoxes)
         {
             List<String> gamersInTournament= new List<String>();
@@ -133,9 +144,11 @@ namespace TournamentManager
                 }
             }
 
-            return gamersInTournament ;
+            return gamersInTournament;
         }
 
+        //Function to select a winner, change colors of buttons and enable buttons
+        //Also updates the win/loss columns in the database with other function calls
         private string winnerSelected(Button winner, Button loser)
         {
             winner.BackColor = Color.Green;
@@ -152,6 +165,7 @@ namespace TournamentManager
             return winner.Text;
         }
 
+        //Function to add a win to the gamer's win column
         private void addWinToGamer(string gamerTag)
         {
 
@@ -177,6 +191,7 @@ namespace TournamentManager
             connection.Close();
         }
 
+        //Function to add a loss to the gamer's loss column
         private void addLossToGamer(string gamerTag)
         {
 
@@ -201,166 +216,123 @@ namespace TournamentManager
             connection.Close();
         }
 
+        //Function to disable buttons to save a little bit of code
         private void disableButtons(Button btn1, Button btn2)
         {
             btn1.Enabled = false;
             btn2.Enabled = false;
         }
 
+        //Function to get called on all round 1 buttons when clicked. Updates the database, moves people
+        //to the next bracket, changes colors, disables, and enables buttons
+        private void startingButtonClicked(Button winnerBtn, Button loserBtn, Button nextBtn)
+        {
+            winnerSelected(winnerBtn, loserBtn);
+            nextBtn.Text = winnerBtn.Text;
+            disableButtons(winnerBtn, loserBtn);
+            nextBtn.Enabled = true;
+        }
+
+        //Round 2 version of the function above
+        private void round2ButtonClicked(Button winnerBtn, Button loserBtn, Button nextBtn)
+        {
+            if (loserBtn.Text != string.Empty)
+            {
+                winnerSelected(winnerBtn, loserBtn);
+                nextBtn.Text = winnerBtn.Text;
+                disableButtons(winnerBtn, loserBtn);
+                nextBtn.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Error: 2 gamers need to be in the bracket");
+            }
+        }
+
+        //Round 3 version of the function above
+        private void round3ButtonClicked(Button winnerBtn, Button loserBtn, Label winnerLbl)
+        {
+            if (loserBtn.Text != string.Empty)
+            {
+                winnerSelected(winnerBtn, loserBtn);
+                winnerLbl.Text = winnerBtn.Text;
+                disableButtons(winnerBtn, loserBtn);
+            }
+            else
+            {
+                MessageBox.Show("Error: 2 gamers need to be in the bracket");
+            }
+        }
+
+        //All button on click functions that call the 3 above functions
         private void btnPlayer1_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer1, btnPlayer2);
-            btn1Round2.Text = btnPlayer1.Text;
-            disableButtons(btnPlayer1, btnPlayer2);
-            btn1Round2.Enabled = true;
+            startingButtonClicked(btnPlayer1, btnPlayer2, btn1Round2);
         }
 
         private void btnPlayer2_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer2, btnPlayer1);
-            btn1Round2.Text = btnPlayer2.Text;
-            disableButtons(btnPlayer1, btnPlayer2);
-            btn1Round2.Enabled = true;
-
+            startingButtonClicked(btnPlayer2, btnPlayer1, btn1Round2);
         }
 
         private void btnPlayer3_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer3, btnPlayer4);
-            btn2Round2.Text = btnPlayer3.Text;
-            disableButtons(btnPlayer3, btnPlayer4);
-            btn2Round2.Enabled = true;
-
+            startingButtonClicked(btnPlayer3, btnPlayer4, btn2Round2);
         }
 
         private void btnPlayer4_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer4, btnPlayer3);
-            btn2Round2.Text = btnPlayer4.Text;
-            disableButtons(btnPlayer4, btnPlayer3);
-            btn2Round2.Enabled = true;
-
+            startingButtonClicked(btnPlayer4, btnPlayer3, btn2Round2);
         }
 
         private void btnPlayer5_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer5, btnPlayer6);
-            btn3Round2.Text = btnPlayer5.Text;
-            disableButtons(btnPlayer5, btnPlayer6);
-            btn3Round2.Enabled = true;
-        
+            startingButtonClicked(btnPlayer5, btnPlayer6, btn3Round2);
         }
 
         private void btnPlayer6_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer6, btnPlayer5);
-            btn3Round2.Text = btnPlayer6.Text;
-            disableButtons(btnPlayer6, btnPlayer5);
-            btn3Round2.Enabled = true;
+            startingButtonClicked(btnPlayer6, btnPlayer5, btn3Round2);
         }
 
         private void btnPlayer7_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer7, btnPlayer8);
-            btn4Round2.Text = btnPlayer7.Text;
-            disableButtons(btnPlayer7, btnPlayer8);
-            btn4Round2.Enabled = true;
+            startingButtonClicked(btnPlayer7, btnPlayer8, btn4Round2);
         }
 
         private void btnPlayer8_Click(object sender, EventArgs e)
         {
-            winnerSelected(btnPlayer8, btnPlayer7);
-            btn4Round2.Text=btnPlayer8.Text;
-            disableButtons(btnPlayer8, btnPlayer7);
-            btn4Round2.Enabled = true;
+            startingButtonClicked(btnPlayer8, btnPlayer7, btn4Round2);
         }
 
         private void btn1Round2_Click(object sender, EventArgs e)
         {
-            if(btn2Round2.Text != string.Empty)
-            {
-                winnerSelected(btn1Round2, btn2Round2);
-                btn1Round3.Text = btn1Round2.Text;
-                disableButtons(btn1Round2, btn2Round2);
-                btn1Round3.Enabled = true;
-            }
-            else
-            {
-                MessageBox.Show("Error: 2 gamers need to be in the bracket");
-            }
+            round2ButtonClicked(btn1Round2, btn2Round2, btn1Round3);
         }
 
         private void btn2Round2_Click(object sender, EventArgs e)
         {
-            if(btn1Round2.Text != string.Empty)
-            {
-                winnerSelected(btn2Round2, btn1Round2);
-                btn1Round3.Text = btn2Round2.Text;
-                disableButtons(btn2Round2, btn1Round2);
-                btn1Round3.Enabled = true;
-            }
-            else
-            {
-                MessageBox.Show("Error: 2 gamers need to be in the bracket");
-            }
+            round2ButtonClicked(btn2Round2, btn1Round2, btn1Round3);
         }
 
         private void btn3Round2_Click(object sender, EventArgs e)
         {
-            if(btn4Round2.Text != string.Empty)
-            {
-                winnerSelected(btn3Round2, btn4Round2);
-                btn2Round3.Text = btn3Round2.Text;
-                disableButtons(btn3Round2, btn4Round2);
-                btn2Round3.Enabled = true;
-            }
-            else
-            {
-                MessageBox.Show("Error: 2 gamers need to be in the bracket");
-            }
+            round2ButtonClicked(btn3Round2, btn4Round2, btn2Round3);
         }
 
         private void btn4Round2_Click(object sender, EventArgs e)
         {
-            if(btn3Round2.Text!= string.Empty)
-            {
-                winnerSelected(btn4Round2, btn3Round2);
-                btn2Round3.Text = btn4Round2.Text;
-                disableButtons(btn4Round2, btn3Round2);
-                btn2Round3.Enabled=true;
-            }
-            else
-            {
-                MessageBox.Show("Error: 2 gamers need to be in the bracket");
-            }
+            round2ButtonClicked(btn4Round2, btn3Round2, btn2Round3);
         }
 
         private void btn1Round3_Click(object sender, EventArgs e)
         {
-            if(btn2Round3.Text != string.Empty)
-            {
-                winnerSelected(btn1Round3, btn2Round3);
-                lblWinner.Text = btn1Round3.Text;
-                disableButtons(btn1Round3, btn2Round3);
-            }
-            else 
-            {
-                MessageBox.Show("Error: 2 gamers need to be in the bracket");
-            }
+            round3ButtonClicked(btn1Round3, btn2Round3, lblWinner);
         }
 
         private void btn2Round3_Click(object sender, EventArgs e)
         {
-            if(btn1Round3.Text != string.Empty)
-            {
-                winnerSelected(btn2Round3, btn1Round3);
-                lblWinner.Text = btn2Round3.Text;
-                disableButtons(btn2Round3, btn1Round3);
-            }
-            else
-            {
-                MessageBox.Show("Error: 2 gamers need to be in the bracket");
-            }
+            round3ButtonClicked(btn2Round3, btn1Round3, lblWinner);
         }
     }
 }

@@ -39,6 +39,10 @@
             this.btnDeleteChecked = new System.Windows.Forms.Button();
             this.btnTournamentScreen = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -137,11 +141,51 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "All Gamers";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(30, 340);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(299, 20);
+            this.label5.TabIndex = 10;
+            this.label5.Text = " Enter a username and gamer tag. Click Add";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(34, 360);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(277, 20);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "gamer to add to the database. Once you";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(34, 380);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(299, 20);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "have enough players click Start Tournament.";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(34, 400);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(294, 20);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "8 players are needed to start a tournament.";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 551);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.btnTournamentScreen);
             this.Controls.Add(this.btnDeleteChecked);
@@ -172,5 +216,9 @@
         private Button btnDeleteChecked;
         private Button btnTournamentScreen;
         private Label label4;
+        private Label label5;
+        private Label label6;
+        private Label label7;
+        private Label label8;
     }
 }

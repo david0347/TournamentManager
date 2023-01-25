@@ -35,12 +35,13 @@ namespace TournamentManager
 
             SqlConnection connection = new SqlConnection(ConnectionString);
 
-            SqlCommand getAllGamers = new SqlCommand(getAllString, connection);
             //Dynamic list to add gamers
             List<Gamer> allEntries = new List<Gamer>();
 
             //Open connection and read from the database
             connection.Open();
+            SqlCommand getAllGamers = new SqlCommand(getAllString, connection);
+
             //the sqlReader is needed to go through all the data
             using (SqlDataReader reader = getAllGamers.ExecuteReader())
             {
@@ -174,14 +175,15 @@ namespace TournamentManager
             SqlConnection connection = new SqlConnection(ConnectionString);
             string getWinQuery = "SELECT Wins FROM PlayerDB WHERE GamerTag = @gamerTag";
             string updateWinQuery = "UPDATE PlayerDB set Wins = @wins WHERE GamerTag = @gamerTag";
+            
+
+            //Open connection, set wins equal to the wins of the gamer
+            connection.Open();
             SqlCommand getWinsCommand = new SqlCommand(getWinQuery, connection);
             SqlCommand updateWinsCommand = new SqlCommand(updateWinQuery, connection);
 
             getWinsCommand.Parameters.AddWithValue("@gamerTag", gamerTag);
             updateWinsCommand.Parameters.AddWithValue("@gamerTag", gamerTag);
-
-            //Open connection, set wins equal to the wins of the gamer
-            connection.Open();
             wins = (Int32)getWinsCommand.ExecuteScalar();
 
             //Add 1 to gamer and update the database
@@ -198,6 +200,10 @@ namespace TournamentManager
             Int32 losses = 0;
             //Variables for losses
             SqlConnection connection = new SqlConnection(ConnectionString);
+            
+
+            //Open connection, read the losses, add 1 and update the database
+            connection.Open();
             string getLossQuery = "SELECT Losses FROM PlayerDB WHERE GamerTag = @gamerTag";
             string updateLossQuery = "UPDATE PlayerDB set Losses = @losses WHERE GamerTag = @gamerTag";
             SqlCommand getLossCommand = new SqlCommand(getLossQuery, connection);
@@ -205,9 +211,6 @@ namespace TournamentManager
 
             getLossCommand.Parameters.AddWithValue("@gamerTag", gamerTag);
             updateLossCommand.Parameters.AddWithValue("@gamerTag", gamerTag);
-
-            //Open connection, read the losses, add 1 and update the database
-            connection.Open();
             losses = (Int32)getLossCommand.ExecuteScalar();
             losses++;
 

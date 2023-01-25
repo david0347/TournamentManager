@@ -104,7 +104,6 @@ namespace TournamentManager
 
             //Sql connection and command
             SqlConnection connection = new SqlConnection(ConnectionString);
-            SqlCommand deleteAllGamers = new SqlCommand(query, connection);
 
             //Loop through and delete the check boxes from the screen
             for(int i = 0; i < checkBoxes.Count; i++)
@@ -115,6 +114,7 @@ namespace TournamentManager
             
             //Actual code to delete the whole database
             connection.Open();
+            SqlCommand deleteAllGamers = new SqlCommand(query, connection);
             deleteAllGamers.ExecuteNonQuery();
             connection.Close();
         }
@@ -139,10 +139,11 @@ namespace TournamentManager
 
                     //Sql commands to run the SQL script
                     SqlConnection connection = new SqlConnection(ConnectionString);
-                    SqlCommand deleteGamer = new SqlCommand(query, connection);
-                    deleteGamer.Parameters.AddWithValue("@GamerTag", gamers[i].getGamerTag());
+                    
 
                     connection.Open();
+                    SqlCommand deleteGamer = new SqlCommand(query, connection);
+                    deleteGamer.Parameters.AddWithValue("@GamerTag", gamers[i].getGamerTag());
                     deleteGamer.ExecuteNonQuery();
                     connection.Close();
                 }
@@ -161,10 +162,11 @@ namespace TournamentManager
             //SQL query to count the number of gamers to make sure there are no duplicates
             string query = "SELECT COUNT(*) FROM PlayerDB WHERE GamerTag = @gamerTag";
             SqlConnection connection = new SqlConnection(ConnectionString);
-            SqlCommand countGamer = new SqlCommand(query, connection);
-            countGamer.Parameters.AddWithValue("@gamerTag", gamer.getGamerTag());
+            
 
             connection.Open();
+            SqlCommand countGamer = new SqlCommand(query, connection);
+            countGamer.Parameters.AddWithValue("@gamerTag", gamer.getGamerTag());
             //Needs to have (Int32) to work syntactically
             gamerCount = (Int32) countGamer.ExecuteScalar();
             connection.Close();
@@ -196,14 +198,14 @@ namespace TournamentManager
 
             SqlConnection connection = new SqlConnection(ConnectionString);
 
-            SqlCommand getAllGamers = new SqlCommand(getAllString, connection);
             //Dynamic list to add gamers
             List<Gamer> allEntries = new List<Gamer>();
             
             //Open connection and read from the database
             connection.Open();
+            SqlCommand getAllGamers = new SqlCommand(getAllString, connection);
             //the sqlReader is needed to go through all the data
-            using(SqlDataReader reader = getAllGamers.ExecuteReader())
+            using (SqlDataReader reader = getAllGamers.ExecuteReader())
             {
                 //While reader is still reading data base add a new gamer to the gamer list
                 while (reader.Read())
